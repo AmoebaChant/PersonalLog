@@ -4,9 +4,14 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { store } from './dataLayer/store';
 
-// import { App } from './app';
+import { App } from './app';
 
 console.log('index.tsx');
 
 const rootElement = document.getElementById('root');
-ReactDOM.render(<Provider store={store}>Foo</Provider>, rootElement);
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  rootElement
+);
