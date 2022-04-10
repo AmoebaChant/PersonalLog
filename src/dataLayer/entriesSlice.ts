@@ -28,9 +28,11 @@ export const entriesSlice = createSlice({
 
     // Use the PayloadAction type to declare the contents of `action.payload`
     removeEntry: (state, action: PayloadAction<string>) => {
-      state.entries.filter((entry) => {
-        entry.name !== action.payload;
-      });
+      const index = state.entries.findIndex((entry) => entry.id === action.payload);
+
+      if (index >= 0) {
+        state.entries.splice(index, 1);
+      }
     }
   }
 });
