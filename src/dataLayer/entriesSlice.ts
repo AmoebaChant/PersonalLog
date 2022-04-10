@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store';
 
 export interface IEntry {
+  id: string;
   name: string;
 }
 
@@ -12,7 +13,7 @@ interface IEntriesState {
 
 // Define the initial state using that type
 const initialState: IEntriesState = {
-  entries: [{ name: 'First' }]
+  entries: []
 };
 
 export const entriesSlice = createSlice({
@@ -21,8 +22,8 @@ export const entriesSlice = createSlice({
   initialState,
   reducers: {
     // Use the PayloadAction type to declare the contents of `action.payload`
-    addEntry: (state, action: PayloadAction<string>) => {
-      state.entries.push({ name: action.payload });
+    addEntry: (state, action: PayloadAction<IEntry>) => {
+      state.entries.push(action.payload);
     },
 
     // Use the PayloadAction type to declare the contents of `action.payload`
