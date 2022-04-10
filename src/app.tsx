@@ -9,7 +9,7 @@ export function App() {
   const entries = useSelector(selectEntries);
   const dispatch = useDispatch();
 
-  const contents = entries.map((entry: IEntry) => <div>{entry.name}</div>);
+  const contents = entries.map((entry: IEntry) => <div key={entry.name}>{entry.name}</div>);
 
   return <div>{contents}</div>;
 }
