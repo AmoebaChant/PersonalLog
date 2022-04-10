@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './dataLayer/store';
 
-import { App } from './app';
+import { App } from './components/app';
 
 console.log('index.tsx');
 
