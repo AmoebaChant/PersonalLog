@@ -6,13 +6,15 @@ import { Provider } from 'react-redux';
 import { store } from './dataLayer/store';
 
 import { App } from './components/app';
+import { Auth } from './dataLayer/auth';
 
 console.log('index.tsx');
 
 const container = document.getElementById('root');
 const reactRoot = createRoot(container);
+const auth = new Auth();
 reactRoot.render(
   <Provider store={store}>
-    <App />
+    <App auth={auth} />
   </Provider>
 );
