@@ -1,39 +1,21 @@
 import * as React from 'react';
-import { store } from '../dataLayer/store';
-import { List } from './list';
-import { Menu } from './menu';
-import throttle from 'lodash.throttle';
-import { saveStateToLocalStorage } from '../dataLayer/persistentStorage';
+import { Auth, LoginPhase } from '../dataLayer/auth';
+import { LoggedInMain } from './loggedInMain';
+import { NotLoggedInMain } from './notLoggedInMain';
 
-export function App() {
-  const [isSaved, setIsSaved] = React.useState<boolean>(true);
-  const saveTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  function saveNow() {
-    saveStateToLocalStorage(store.getState());
-    setIsSaved(true);
-  }
+export interface IAppProps {
+  auth: Auth;
+}
+export function App(props: IAppProps) {
+  const [loginPhase, setLoginPhase] = React.useState<LoginPhase>(props.auth.loginPhase.value);
 
   React.useEffect(() => {
-    const unsubscribe = store.subscribe(() => {
-      if (saveTimer.current !== undefined) {
-        clearTimeout(saveTimer.current);
-      }
-      setIsSaved(false);
-      saveTimer.current = setTimeout(() => {
-        saveStateToLocalStorage(store.getState());
-        setIsSaved(true);
-      }, 1000);
+    const unsubscribe = props.auth.loginPhase.subscribe((newLoginPhase: LoginPhase) => {
+      setLoginPhase(newLoginPhase);
     });
-    return () => {
-      unsubscribe();
-    };
-  }, [setIsSaved]);
 
-  return (
-    <div>
-      <Menu isSaved={isSaved} />
-      <List />
-    </div>
-  );
+    return unsubscribe;
+  }, [props.auth, setLoginPhase]);
+
+  return <div>{loginPhase === 'loggedIn' ? <LoggedInMain /> : <NotLoggedInMain auth={props.auth} />}</div>;
 }
