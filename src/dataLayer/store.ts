@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import entriesReducer, { IEntry } from './entriesSlice';
+import entriesReducer, { IEntriesState } from './entriesSlice';
 import { loadStateFromLocalStorage } from './persistentStorage';
 
 export const store = configureStore({
@@ -10,9 +10,7 @@ export const store = configureStore({
 });
 
 export type RootState = {
-  entries?: {
-    entries: IEntry[];
-  };
+  entries?: IEntriesState;
 };
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
