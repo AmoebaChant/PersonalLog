@@ -21,6 +21,11 @@ export const entriesSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
+    // Used to load all of the entries
+    loadAllEntries: (state, action: PayloadAction<IEntry[] | undefined>) => {
+      state.entries = action.payload;
+    },
+
     // Use the PayloadAction type to declare the contents of `action.payload`
     addEntry: (state, action: PayloadAction<IEntry>) => {
       state.entries.push(action.payload);
@@ -37,7 +42,7 @@ export const entriesSlice = createSlice({
   }
 });
 
-export const { addEntry, removeEntry } = entriesSlice.actions;
+export const { loadAllEntries, addEntry, removeEntry } = entriesSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectEntries = (state: RootState) => state.entries.entries;

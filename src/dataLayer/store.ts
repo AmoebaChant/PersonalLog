@@ -9,8 +9,6 @@ export const store = configureStore({
   preloadedState: loadStateFromLocalStorage()
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-// export type RootState = ReturnType<typeof store.getState>;
 export type RootState = {
   entries?: {
     entries: IEntry[];
