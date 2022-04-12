@@ -1,6 +1,5 @@
-import { RootState } from './store';
 import * as graph from '@microsoft/microsoft-graph-client';
-import { json } from 'stream/consumers';
+import { IEntriesState } from './entriesSlice';
 
 interface IFileItem {
   id: string;
@@ -56,33 +55,20 @@ async function getFileContents(accessToken: string, fileName: string): Promise<s
   }
 }
 
-export async function loadDataFromOneDrive(accessToken: string): Promise<RootState> {
+export async function loadDataFromOneDrive(accessToken: string): Promise<IEntriesState> {
   const fileContents = await getFileContents(accessToken, 'PersonalLog.json');
 
   if (fileContents === undefined) {
-    return {};
+    return {
+      entries: [],
+      isDirty: false
+    };
   }
 
-  return JSON.parse(fileContents) as RootState;
-
-  // const matchingFiles = await findFiles(accessToken, 'PersonalLog.json');
-  // if (matchingFiles && matchingFiles.length >= 1) {
-  //   window.performance.mark('OneDriveDownloadStart');
-  //   const response = await fetch(matchingFiles[0]['@microsoft.graph.downloadUrl']);
-  //   window.performance.measure('OneDriveDownload', 'OneDriveDownloadStart');
-
-  //   if (response.ok) {
-  //     const json = await response.json();
-  //     return json.parse() as RootState;
-  //   } else {
-  //     throw new Error('Fetch failure: ' + response.statusText);
-  //   }
-  // } else {
-  //   return {};
-  // }
+  return JSON.parse(fileContents) as IEntriesState;
 }
 
-export async function saveDataToOneDrive(accessToken: string, data: RootState): Promise<void> {
+export async function saveDataToOneDrive(accessToken: string, entries: IEntriesState): Promise<void> {
   const matchingFiles = await findFiles(accessToken, 'PersonalLog.txt');
   // TODO: implement save logic
 }

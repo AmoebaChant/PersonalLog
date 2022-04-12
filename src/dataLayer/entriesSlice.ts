@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { stat } from 'fs';
 import type { RootState } from './store';
 
 export interface IEntry {
@@ -7,13 +8,15 @@ export interface IEntry {
 }
 
 // Define a type for the slice state
-interface IEntriesState {
+export interface IEntriesState {
   entries: IEntry[];
+  isDirty: boolean;
 }
 
 // Define the initial state using that type
 const initialState: IEntriesState = {
-  entries: []
+  entries: [],
+  isDirty: false
 };
 
 export const entriesSlice = createSlice({
@@ -22,13 +25,15 @@ export const entriesSlice = createSlice({
   initialState,
   reducers: {
     // Used to load all of the entries
-    loadAllEntries: (state, action: PayloadAction<IEntry[] | undefined>) => {
-      state.entries = action.payload;
+    loadAllEntries: (state, action: PayloadAction<IEntriesState | undefined>) => {
+      state.entries = action.payload.entries;
+      state.isDirty = false;
     },
 
     // Use the PayloadAction type to declare the contents of `action.payload`
     addEntry: (state, action: PayloadAction<IEntry>) => {
       state.entries.push(action.payload);
+      state.isDirty = true;
     },
 
     // Use the PayloadAction type to declare the contents of `action.payload`
@@ -37,6 +42,7 @@ export const entriesSlice = createSlice({
 
       if (index >= 0) {
         state.entries.splice(index, 1);
+        state.isDirty = true;
       }
     }
   }
@@ -46,5 +52,6 @@ export const { loadAllEntries, addEntry, removeEntry } = entriesSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectEntries = (state: RootState) => state.entries.entries;
+export const selectIsDirty = (state: RootState) => state.entries.isDirty;
 
 export default entriesSlice.reducer;
