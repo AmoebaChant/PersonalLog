@@ -17,5 +17,5 @@ export function App(props: IAppProps) {
     return unsubscribe;
   }, [props.auth, setLoginPhase]);
 
-  return <div>{loginPhase === 'loggedIn' ? <LoggedInMain /> : <NotLoggedInMain auth={props.auth} />}</div>;
+  return <div>{loginPhase === 'loggedIn' ? <LoggedInMain auth={props.auth} /> : <NotLoggedInMain auth={props.auth} />}</div>;
 }

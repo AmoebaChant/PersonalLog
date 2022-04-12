@@ -8,7 +8,7 @@ export type LoginPhase = 'start' | 'loginNeeded' | 'loggedIn' | 'error';
 
 const config = {
   appId: '01d7c004-197e-4edd-8673-7f94000c4328',
-  scopes: ['user.read', 'files.read.all']
+  scopes: ['user.read', 'files.readwrite']
 };
 
 export class Auth {
