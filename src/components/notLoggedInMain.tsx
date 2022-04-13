@@ -1,8 +1,4 @@
 import * as React from 'react';
-import { store } from '../dataLayer/store';
-import { List } from './list';
-import { Menu } from './menu';
-import { saveStateToLocalStorage } from '../dataLayer/persistentStorage';
 import { Auth, LoginPhase } from '../dataLayer/auth';
 
 export interface INotLoggedInMain {
