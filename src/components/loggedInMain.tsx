@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Auth } from '../dataLayer/auth';
-import { loadAllEntries, selectIsDirty } from '../dataLayer/entriesSlice';
-import { loadDataFromOneDrive, saveDataToOneDrive } from '../dataLayer/oneDrive';
+import { loadAllEntries, selectIsDirty, setIsDirty } from '../dataLayer/entriesSlice';
+import { loadDataFromOneDrive, saveDataToOneDrive } from '../storage/storage';
 import { store } from '../dataLayer/store';
 import { List } from './list';
 import { Menu } from './menu';
@@ -23,8 +23,8 @@ export function LoggedInMain(props: ILoggedInMainProps) {
   async function loadData(): Promise<void> {
     try {
       setDataLoadingState('loading');
-      const entries = await loadDataFromOneDrive(await props.auth.getAccessToken());
-      dispatch(loadAllEntries(entries));
+      const rootState = await loadDataFromOneDrive(await props.auth.getAccessToken());
+      dispatch(loadAllEntries(rootState.entries));
       setDataLoadingState('saved');
     } catch (error) {
       console.log('Load error: ' + error);
@@ -52,8 +52,16 @@ export function LoggedInMain(props: ILoggedInMainProps) {
   async function saveNow(): Promise<void> {
     try {
       setDataLoadingState('saving');
-      await saveDataToOneDrive(await props.auth.getAccessToken(), store.getState().entries);
-      setDataLoadingState('saved');
+      const stateToSave = store.getState();
+      await saveDataToOneDrive(await props.auth.getAccessToken(), stateToSave);
+      if (stateToSave.entries.changeNumber === store.getState().entries.changeNumber) {
+        dispatch(setIsDirty(false));
+        setDataLoadingState('saved');
+      } else {
+        // Data change while we were saving
+        setDataLoadingState('dirty');
+        enqueueSave();
+      }
     } catch (error) {
       console.log('Save error: ' + error);
       setDataLoadingState('error');

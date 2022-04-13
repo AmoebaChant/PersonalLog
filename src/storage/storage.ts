@@ -1,5 +1,7 @@
 import * as graph from '@microsoft/microsoft-graph-client';
-import { IEntriesState } from './entriesSlice';
+import { IEntriesState } from '../dataLayer/entriesSlice';
+import { RootStateV1 } from '../dataLayer/store';
+import { convertForSavingToStorage, loadFromStorageContents } from './schema/loader';
 
 interface IFileItem {
   id: string;
@@ -15,6 +17,8 @@ interface IFileItem {
   };
   [name: string]: any;
 }
+
+const FILE_NAME = 'PersonalLog.json';
 
 function getAuthenticatedClient(accessToken: string) {
   const authProvider = (done: any) => {
@@ -55,20 +59,19 @@ async function getFileContents(accessToken: string, fileName: string): Promise<s
   }
 }
 
-export async function loadDataFromOneDrive(accessToken: string): Promise<IEntriesState> {
-  const fileContents = await getFileContents(accessToken, 'PersonalLog.json');
-
-  if (fileContents === undefined) {
-    return {
-      entries: [],
-      isDirty: false
-    };
-  }
-
-  return JSON.parse(fileContents) as IEntriesState;
+async function writeToFile(accessToken: string, fileName: string, fileContents: string): Promise<void> {
+  const client = getAuthenticatedClient(accessToken);
+  const fileQuery = await client.api('https://graph.microsoft.com/v1.0/me/drive/root:/' + fileName).get();
+  const itemId = fileQuery.id;
+  await client.api('https://graph.microsoft.com/v1.0/me/drive/items/' + itemId + '/content').put(fileContents);
 }
 
-export async function saveDataToOneDrive(accessToken: string, entries: IEntriesState): Promise<void> {
-  const matchingFiles = await findFiles(accessToken, 'PersonalLog.txt');
-  // TODO: implement save logic
+export async function loadDataFromOneDrive(accessToken: string): Promise<RootStateV1> {
+  const fileContents = await getFileContents(accessToken, FILE_NAME);
+
+  return loadFromStorageContents(fileContents);
+}
+
+export function saveDataToOneDrive(accessToken: string, data: RootStateV1): Promise<void> {
+  return writeToFile(accessToken, FILE_NAME, convertForSavingToStorage(data));
 }
