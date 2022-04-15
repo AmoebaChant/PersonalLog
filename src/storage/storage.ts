@@ -1,5 +1,5 @@
 import * as graph from '@microsoft/microsoft-graph-client';
-import { IEntriesState } from '../dataLayer/entriesSlice';
+import { IV1EntriesState } from '../dataLayer/entriesSlice';
 import { RootStateV1 } from '../dataLayer/store';
 import { convertForSavingToStorage, loadFromStorageContents } from './schema/loader';
 

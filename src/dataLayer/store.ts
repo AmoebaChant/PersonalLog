@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import entriesReducer, { entriesInitialState, IEntriesState } from './entriesSlice';
+import entriesReducer, { entriesInitialState, IV1EntriesState } from './entriesSlice';
 
 export type RootStateV1 = {
-  entries?: IEntriesState;
+  entries?: IV1EntriesState;
 };
 
 export const defaultRootState: RootStateV1 = {

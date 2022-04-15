@@ -1,20 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootStateV1 } from './store';
 
-export interface IEntry {
+export interface IV1Entry {
   id: string;
-  name: string;
+  date: string;
+  body: string;
 }
 
 // Define a type for the slice state
-export interface IEntriesState {
-  entries: IEntry[];
+export interface IV1EntriesState {
+  entries: IV1Entry[];
   changeNumber: number;
   isDirty: boolean;
 }
 
 // Define the initial state using that type
-export const entriesInitialState: IEntriesState = {
+export const entriesInitialState: IV1EntriesState = {
   entries: [],
   changeNumber: 0,
   isDirty: false
@@ -26,7 +27,7 @@ export const entriesSlice = createSlice({
   initialState: entriesInitialState,
   reducers: {
     // Used to load all of the entries
-    loadAllEntries: (state, action: PayloadAction<IEntriesState | undefined>) => {
+    loadAllEntries: (state, action: PayloadAction<IV1EntriesState | undefined>) => {
       if (action.payload) {
         state.entries = action.payload.entries;
         state.isDirty = false;
@@ -35,7 +36,7 @@ export const entriesSlice = createSlice({
     },
 
     // Use the PayloadAction type to declare the contents of `action.payload`
-    addEntry: (state, action: PayloadAction<IEntry>) => {
+    addEntry: (state, action: PayloadAction<IV1Entry>) => {
       state.entries.push(action.payload);
       state.isDirty = true;
       state.changeNumber++;
