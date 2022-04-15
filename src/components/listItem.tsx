@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { IEntry, removeEntry, selectEntries } from '../dataLayer/entriesSlice';
+import { IV1Entry, removeEntry, selectEntries } from '../dataLayer/entriesSlice';
 
 export interface IListItemProps {
-  entry: IEntry;
+  entry: IV1Entry;
 }
 
 export function ListItem(props: IListItemProps) {
@@ -12,7 +12,10 @@ export function ListItem(props: IListItemProps) {
 
   return (
     <div>
-      {props.entry.name}
+      <div className="entryDate">
+        {new Date(props.entry.date).toLocaleString('en-us', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
+      </div>
+      <div className="entryBody">{props.entry.body}</div>
       <button onClick={() => dispatch(removeEntry(props.entry.id))}>Remove</button>
     </div>
   );

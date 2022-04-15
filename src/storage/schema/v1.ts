@@ -7,8 +7,7 @@ interface IV1Schema extends ICommonSchema {
 
 export function loadV1(data: string): RootStateV1 {
   try {
-    const parsedData = JSON.parse(data) as IV1Schema;
-    return parsedData.data;
+    return (JSON.parse(data) as IV1Schema).data;
   } catch (error) {
     console.error('Error parsing V1 data: ' + error);
     throw new Error('Error parsing V1 data: ' + error);
