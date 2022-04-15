@@ -76,7 +76,7 @@ export function LoggedInMain(props: ILoggedInMainProps) {
   }
 
   return (
-    <div>
+    <div className="loggedInRoot">
       <Menu dataLoadingState={dataLoadingState} />
       <List />
     </div>
