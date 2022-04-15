@@ -7,5 +7,5 @@ export function List() {
   const entries = useSelector(selectEntries);
   const contents = entries.map((entry: IV1Entry) => <ListItem key={entry.id} entry={entry}></ListItem>);
 
-  return <div>{contents}</div>;
+  return <div className="listRoot">{contents}</div>;
 }

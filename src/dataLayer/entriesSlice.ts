@@ -29,7 +29,7 @@ export const entriesSlice = createSlice({
     // Used to load all of the entries
     loadAllEntries: (state, action: PayloadAction<IV1EntriesState | undefined>) => {
       if (action.payload) {
-        state.entries = action.payload.entries;
+        state.entries = action.payload.entries.sort((a: IV1Entry, b: IV1Entry) => b.date.localeCompare(a.date));
         state.isDirty = false;
         state.changeNumber = 0;
       }
