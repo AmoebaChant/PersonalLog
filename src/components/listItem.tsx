@@ -12,9 +12,7 @@ export function ListItem(props: IListItemProps) {
 
   return (
     <div>
-      <div className="entryDate">
-        {new Date(props.entry.date).toLocaleString('en-us', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/(\d+)\/(\d+)\/(\d+)/, '$3-$1-$2')}
-      </div>
+      <div className="entryDate">{new Date(props.entry.date)}</div>
       <div className="entryBody">{props.entry.body}</div>
       <button onClick={() => dispatch(removeEntry(props.entry.id))}>Remove</button>
     </div>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Auth } from '../dataLayer/auth';
 import { loadAllEntries, selectIsDirty, setIsDirty } from '../dataLayer/entriesSlice';
-import { loadDataFromOneDrive, saveDataToOneDrive } from '../storage/storage';
+import { loadData, saveData } from '../storage/storage';
 import { store } from '../dataLayer/store';
 import { List } from './list';
 import { Menu } from './menu';
@@ -16,6 +16,7 @@ export interface ILoggedInMainProps {
 export function LoggedInMain(props: ILoggedInMainProps) {
   const [dataLoadingState, setDataLoadingState] = React.useState<DataLoadingState>('start');
   const saveTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [isAddDialogShown, setIsAddDialogShown] = React.useState<boolean>(false);
   const isDirty = useSelector(selectIsDirty);
 
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ export function LoggedInMain(props: ILoggedInMainProps) {
   async function loadData(): Promise<void> {
     try {
       setDataLoadingState('loading');
-      const rootState = await loadDataFromOneDrive(await props.auth.getAccessToken());
+      const rootState = await loadData(await props.auth.getAccessToken());
       dispatch(loadAllEntries(rootState.entries));
       setDataLoadingState('saved');
     } catch (error) {
@@ -53,7 +54,7 @@ export function LoggedInMain(props: ILoggedInMainProps) {
     try {
       setDataLoadingState('saving');
       const stateToSave = store.getState();
-      await saveDataToOneDrive(await props.auth.getAccessToken(), stateToSave);
+      await saveData(await props.auth.getAccessToken(), stateToSave);
       if (stateToSave.entries.changeNumber === store.getState().entries.changeNumber) {
         dispatch(setIsDirty(false));
         setDataLoadingState('saved');
@@ -79,6 +80,7 @@ export function LoggedInMain(props: ILoggedInMainProps) {
     <div className="loggedInRoot">
       <Menu dataLoadingState={dataLoadingState} />
       <List />
+      {isAddDialogShown ? <AddDialog /> : <></>}
     </div>
   );
 }
