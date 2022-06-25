@@ -1,20 +1,13 @@
 import * as React from 'react';
 import { Auth, LoginPhase } from '../dataLayer/auth';
+import { useObservable } from '../dataLayer/observable/useObservable';
 
 export interface INotLoggedInMain {
   auth: Auth;
 }
 
 export function NotLoggedInMain(props: INotLoggedInMain) {
-  const [loginPhase, setLoginPhase] = React.useState<LoginPhase>(props.auth.loginPhase.value);
-
-  React.useEffect(() => {
-    const unsubscribe = props.auth.loginPhase.subscribe((newLoginPhase: LoginPhase) => {
-      setLoginPhase(newLoginPhase);
-    });
-
-    return unsubscribe;
-  }, [props.auth, setLoginPhase]);
+  const [loginPhase] = useObservable(props.auth.loginPhase);
 
   return (
     <div>

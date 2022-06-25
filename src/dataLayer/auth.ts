@@ -1,6 +1,6 @@
-import { Observable } from '../utilities/observable';
 import * as msal from '@azure/msal-browser';
 import { normalizeError } from '../utilities/errors';
+import { Observable } from './observable/observable';
 
 // TODO: Refactor into a React provider with hooks
 
