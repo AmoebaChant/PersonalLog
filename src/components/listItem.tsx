@@ -11,10 +11,12 @@ export function ListItem(props: IListItemProps) {
   const dispatch = useDispatch();
 
   return (
-    <div>
-      <div className="entryDate">{new Date(props.entry.date).toDateString()}</div>
+    <div className="listItem">
+      <div className="entryHeader">
+        <div className="entryDate">{new Date(props.entry.date).toDateString()}</div>
+        {/* <button onClick={() => dispatch(removeEntry(props.entry.id))}>-</button> */}
+      </div>
       <div className="entryBody">{props.entry.body}</div>
-      <button onClick={() => dispatch(removeEntry(props.entry.id))}>Remove</button>
     </div>
   );
 }
