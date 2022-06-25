@@ -10,9 +10,12 @@ export function App(props: IAppProps) {
   const [loginPhase, setLoginPhase] = React.useState<LoginPhase>(props.auth.loginPhase.value);
 
   React.useEffect(() => {
-    const unsubscribe = props.auth.loginPhase.subscribe((newLoginPhase: LoginPhase) => {
-      setLoginPhase(newLoginPhase);
-    });
+    const unsubscribe = props.auth.loginPhase.subscribe(
+      (newLoginPhase: LoginPhase) => {
+        setLoginPhase(newLoginPhase);
+      },
+      { notifyWithCurrentValue: false }
+    );
 
     return unsubscribe;
   }, [props.auth, setLoginPhase]);
