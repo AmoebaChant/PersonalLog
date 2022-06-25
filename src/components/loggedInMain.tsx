@@ -2,10 +2,11 @@ import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Auth } from '../dataLayer/auth';
 import { loadAllEntries, selectIsDirty, setIsDirty } from '../dataLayer/entriesSlice';
-import { loadData, saveData } from '../storage/storage';
+import { loadData as loadDataFromStorage, saveData } from '../storage/storage';
 import { store } from '../dataLayer/store';
 import { List } from './list';
 import { Menu } from './menu';
+import { AddDialog } from './addDialog';
 
 export type DataLoadingState = 'start' | 'loading' | 'saved' | 'dirty' | 'saving' | 'error';
 
@@ -24,7 +25,7 @@ export function LoggedInMain(props: ILoggedInMainProps) {
   async function loadData(): Promise<void> {
     try {
       setDataLoadingState('loading');
-      const rootState = await loadData(await props.auth.getAccessToken());
+      const rootState = await loadDataFromStorage(await props.auth.getAccessToken());
       dispatch(loadAllEntries(rootState.entries));
       setDataLoadingState('saved');
     } catch (error) {
@@ -80,7 +81,7 @@ export function LoggedInMain(props: ILoggedInMainProps) {
     <div className="loggedInRoot">
       <Menu dataLoadingState={dataLoadingState} />
       <List />
-      {isAddDialogShown ? <AddDialog /> : <></>}
+      {isAddDialogShown ? <AddDialog></AddDialog> : <></>}
     </div>
   );
 }

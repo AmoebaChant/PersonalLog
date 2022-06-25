@@ -12,7 +12,7 @@ export function ListItem(props: IListItemProps) {
 
   return (
     <div>
-      <div className="entryDate">{new Date(props.entry.date)}</div>
+      <div className="entryDate">{new Date(props.entry.date).toDateString()}</div>
       <div className="entryBody">{props.entry.body}</div>
       <button onClick={() => dispatch(removeEntry(props.entry.id))}>Remove</button>
     </div>
