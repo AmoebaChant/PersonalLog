@@ -8,7 +8,7 @@ import { store } from './dataLayer/store';
 import { App } from './components/app';
 import { Auth } from './dataLayer/auth';
 
-console.log('index.tsx');
+import './index.css';
 
 const container = document.getElementById('root');
 const reactRoot = createRoot(container);

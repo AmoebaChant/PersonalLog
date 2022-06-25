@@ -13,8 +13,11 @@ export function Menu(props: IMenuProps) {
   const dispatch = useDispatch();
   return (
     <div className="menuRoot">
-      {props.dataLoadingState}
-      <button onClick={() => dispatch(addEntry({ id: uuidv4(), date: new Date(Date.now()).toISOString(), body: 'New entry' }))}>Add</button>
+      <div className="logo">PL</div>
+      <div className="loadingState">
+        [<span className="loadingStateText">{props.dataLoadingState}</span>]
+      </div>
+      <button onClick={() => dispatch(addEntry({ id: uuidv4(), date: new Date(Date.now()).toISOString(), body: 'New entry' }))}>+</button>
     </div>
   );
 }
