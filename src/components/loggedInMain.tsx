@@ -60,13 +60,14 @@ export function LoggedInMain(props: ILoggedInMainProps) {
         dispatch(setIsDirty(false));
         setDataLoadingState('saved');
       } else {
-        // Data change while we were saving
+        // Data changed while we were saving
         setDataLoadingState('dirty');
         enqueueSave();
       }
     } catch (error) {
       console.log('Save error: ' + error);
       setDataLoadingState('error');
+      enqueueSave();
     }
   }
 
