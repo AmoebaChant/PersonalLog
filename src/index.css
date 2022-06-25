@@ -1,16 +1,53 @@
 body {
-  background-color: black;
-  font-size: 14pt;
+  background-color: #505050;
+  font-size: 12pt;
   color: white;
   margin: 0px;
+  font-family: sans-serif;
+}
+#root {
+  margin: 5px;
+}
+.menuRoot {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.loadingState {
+  margin: 0px 10px 0px 10px;
+  color: cyan;
+  width: 75px;
+}
+.loadingStateText {
+  color: yellow;
+  width: 75px;
+}
+.listRoot {
+  background: #101010;
+}
+.listItem {
+  margin: 0px 0px 15px 0px;
+}
+.entryHeader {
+  background: #505050;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 6px 0px 6px 2px;
+}
+.entryDate {
+ font-size: 14pt; 
+}
+.entryBody {
+  margin: 5px;
+}
+.logo {
+  font-size: 18pt;
 }
 .loggedInRoot {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-}
-.root {
   height: 100vh;
   width: 100vw;
 }
