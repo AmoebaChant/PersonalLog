@@ -5,15 +5,16 @@ import { v4 as uuidv4 } from 'uuid';
 
 export function AddDialog() {
   const [date, setDate] = React.useState<string>(Date);
+  const [body, setBody] = React.useState<string>('');
   const dispatch = useDispatch();
 
   return (
     <div className="addDialog">
       <div className="addLabel">
-        <input type="text" className="addDate" value={date} onChange={(value) => setDate(value)}></input>
+        <input type="text" className="addDate" value={date} onChange={(event) => setDate(event.target.value)}></input>
       </div>
       <div className="addLabel">
-        <input type="text" className="addBody" value={body} onChange={(value) => setBody(value)}></input>
+        <input type="text" className="addBody" value={body} onChange={(event) => setBody(event.target.value)}></input>
       </div>
       <button onClick={() => dispatch(addEntry({ id: uuidv4(), date: new Date(Date.now()).toISOString(), body: 'New entry' }))}>Add</button>
     </div>
