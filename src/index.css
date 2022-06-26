@@ -118,3 +118,13 @@ body {
   padding: 4px;
   resize: none;
 }
+.tagList {
+  margin-left:15px;
+}
+.tag {
+  border: 2px solid;
+  border-radius: 4px;
+  padding: 2px;
+  font-size: 9pt;
+  margin-right: 5px;
+}

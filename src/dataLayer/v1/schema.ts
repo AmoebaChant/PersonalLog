@@ -17,8 +17,12 @@ export const defaultV1Storage: IV1Storage = {
   entries: [] as IV1StorageEntry[]
 };
 
+export interface ITag {
+  name: string;
+  color: string;
+}
 export interface IV1Entry {
-  tags: string[];
+  tags: IObservable<ITag[]>;
   id: string;
   date: IObservable<string>;
   body: IObservable<string>;
