@@ -1,8 +1,13 @@
 import { IObservable, Observable } from '../observable/observable';
-import { IV1Entry, IV1Storage, IV1StorageEntry } from './schema';
+import { ITag, IV1Entry, IV1Storage, IV1StorageEntry } from './schema';
 import { v4 as uuidv4 } from 'uuid';
 
+const TagColors: string[] = ['red', 'blue', 'green', 'yellow', 'orange'];
+
 export class V1DataLayer {
+  private nextTagColorIndex = 0;
+  private tagColorMap = new Map<string, string>();
+
   public readonly isDirty: IObservable<boolean> = new Observable<boolean>(false);
   public readonly entries: IObservable<IV1Entry[]> = new Observable<IV1Entry[]>([]);
 
@@ -14,7 +19,7 @@ export class V1DataLayer {
 
     for (const entry of storedData.entries) {
       const newEntry: IV1Entry = {
-        tags: this.getTags(entry),
+        tags: new Observable<ITag[]>(this.getTags(entry)),
         id: entry.id,
         date: new Observable<string>(entry.date),
         body: new Observable<string>(entry.body),
@@ -48,7 +53,7 @@ export class V1DataLayer {
       id: uuidv4(),
       date: new Observable<string>(new Date(Date.now()).toISOString()),
       body: new Observable<string>(''),
-      tags: [],
+      tags: new Observable<ITag[]>([]),
       unsubscribers: []
     };
 
@@ -69,9 +74,30 @@ export class V1DataLayer {
     }
   }
 
-  private getTags(entry: IV1StorageEntry): string[] {
+  private getTags(entry: IV1StorageEntry): ITag[] {
     const regex = /(#\w*)/g;
-    return entry.body.match(regex);
+    const tagStrings = entry.body.match(regex);
+
+    const tags: ITag[] = [];
+
+    if (tagStrings !== null) {
+      for (const tagString of tagStrings) {
+        tags.push({ name: tagString, color: this.getColor(tagString) });
+      }
+    }
+
+    return tags;
+  }
+
+  private getColor(tag: string): string {
+    if (this.tagColorMap.has(tag)) {
+      return this.tagColorMap.get(tag);
+    } else {
+      const color = TagColors[this.nextTagColorIndex];
+      this.nextTagColorIndex = (this.nextTagColorIndex + 1) % TagColors.length;
+      this.tagColorMap.set(tag, color);
+      return color;
+    }
   }
 
   private setIsDirty(): void {
@@ -82,5 +108,6 @@ export class V1DataLayer {
     // Subscribe to set the dirty bit if any fields are changed
     entry.unsubscribers.push(entry.body.subscribe(this.setIsDirty.bind(this), { notifyWithCurrentValue: false }));
     entry.unsubscribers.push(entry.date.subscribe(this.setIsDirty.bind(this), { notifyWithCurrentValue: false }));
+    entry.unsubscribers.push(entry.tags.subscribe(this.setIsDirty.bind(this), { notifyWithCurrentValue: false }));
   }
 }
