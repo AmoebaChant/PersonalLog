@@ -1,24 +1,19 @@
 import * as React from 'react';
 import { Auth } from '../dataLayer/auth';
 import { loadData as loadDataFromStorage, saveData } from '../storage/storage';
-import { List } from './list';
-import { Menu } from './menu';
-import { AddDialog } from './addDialog';
 import { useObservable } from '../dataLayer/observable/useObservable';
 import { useDataLayerContext } from '../dataLayer/dataLayerContext';
+import { DataLoadingState, Main } from './main';
 import { FilterContext } from './filterContext';
 
-export type DataLoadingState = 'start' | 'loading' | 'saved' | 'dirty' | 'saving' | 'error';
-
-export interface ILoggedInMainProps {
+export interface ISessionProps {
   auth: Auth;
 }
 
-export function LoggedInMain(props: ILoggedInMainProps) {
+export function Session(props: ISessionProps) {
   const dataLayer = useDataLayerContext();
   const [dataLoadingState, setDataLoadingState] = React.useState<DataLoadingState>('start');
   const saveTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const [isAddDialogShown, setIsAddDialogShown] = React.useState<boolean>(false);
   const isDataLayerDirty = useObservable(dataLayer.isDirty);
 
   async function loadData(): Promise<void> {
@@ -79,12 +74,8 @@ export function LoggedInMain(props: ILoggedInMainProps) {
   }
 
   return (
-    <div className="loggedInRoot">
-      <FilterContext.Provider value={{ sort: 'DateDesc' }}>
-        <Menu dataLoadingState={dataLoadingState} />
-        <List />
-      </FilterContext.Provider>
-      {isAddDialogShown ? <AddDialog></AddDialog> : <></>}
-    </div>
+    <FilterContext.Provider value={{ sort: 'DateDesc' }}>
+      <Main auth={props.auth} dataLoadingState={dataLoadingState}></Main>
+    </FilterContext.Provider>
   );
 }
