@@ -6,6 +6,7 @@ import { Menu } from './menu';
 import { AddDialog } from './addDialog';
 import { useObservable } from '../dataLayer/observable/useObservable';
 import { useDataLayerContext } from '../dataLayer/dataLayerContext';
+import { FilterContext } from './filterContext';
 
 export type DataLoadingState = 'start' | 'loading' | 'saved' | 'dirty' | 'saving' | 'error';
 
@@ -79,8 +80,10 @@ export function LoggedInMain(props: ILoggedInMainProps) {
 
   return (
     <div className="loggedInRoot">
-      <Menu dataLoadingState={dataLoadingState} />
-      <List />
+      <FilterContext.Provider value={{ sort: 'DateDesc' }}>
+        <Menu dataLoadingState={dataLoadingState} />
+        <List />
+      </FilterContext.Provider>
       {isAddDialogShown ? <AddDialog></AddDialog> : <></>}
     </div>
   );
