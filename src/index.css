@@ -28,6 +28,7 @@ body {
 }
 .listItem {
   margin: 0px 0px 15px 0px;
+  cursor: pointer;
 }
 .entryHeader {
   background: #505050;
@@ -37,10 +38,14 @@ body {
   padding: 6px 0px 6px 2px;
 }
 .entryDate {
- font-size: 14pt; 
+  font-size: 14pt;
 }
 .entryBody {
   margin: 5px;
+}
+.entryBodyRoot {
+  background: #101010;
+  flex: 1;
 }
 .logo {
   font-size: 18pt;
@@ -56,4 +61,43 @@ body {
 .listRoot {
   flex: 1;
   overflow: auto;
+}
+.dialogRoot {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0px;
+  left: 0px;
+  background: #555555dd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dialogContents {
+  background: #505050;
+  border: 1px solid black;
+  border-radius: 8px;
+  width: 85vw;
+  height: 85vh;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.editHeader {
+  display: flex;
+  justify-content: space-between;
+}
+.buttonPair {
+  margin: 5px;
+  display: flex;
+  flex-direction: row;
+}
+.buttonPair Button {
+  margin: 5px;
+}
+.deleteConfirmationRoot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
 }
