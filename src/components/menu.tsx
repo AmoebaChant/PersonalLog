@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDataLayerContext } from '../dataLayer/dataLayerContext';
-import { DataLoadingState } from './loggedInMain';
+import { DataLoadingState } from './main';
 
 export interface IMenuProps {
   dataLoadingState: DataLoadingState;
