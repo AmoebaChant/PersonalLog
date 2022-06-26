@@ -7,7 +7,7 @@ export interface INotLoggedInMain {
 }
 
 export function NotLoggedInMain(props: INotLoggedInMain) {
-  const [loginPhase] = useObservable(props.auth.loginPhase);
+  const loginPhase = useObservable(props.auth.loginPhase);
 
   return (
     <div>

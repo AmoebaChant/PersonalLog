@@ -1,13 +1,8 @@
-import { RootStateV1 } from '../../dataLayer/store';
-import { ICommonSchema } from './loader';
+import { IV1Storage } from '../../dataLayer/v1/schema';
 
-interface IV1Schema extends ICommonSchema {
-  data: RootStateV1;
-}
-
-export function loadV1(data: string): RootStateV1 {
+export function loadV1(data: string): IV1Storage {
   try {
-    return (JSON.parse(data) as IV1Schema).data;
+    return JSON.parse(data) as IV1Storage;
   } catch (error) {
     console.error('Error parsing V1 data: ' + error);
     throw new Error('Error parsing V1 data: ' + error);

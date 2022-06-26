@@ -16,8 +16,10 @@ export class Observable<T> implements IObservable<T> {
   }
 
   public set value(newValue: T) {
-    this._currentValue = newValue;
-    this.notify(newValue);
+    if (newValue !== this._currentValue) {
+      this._currentValue = newValue;
+      this.notify(newValue);
+    }
   }
 
   constructor(startingValue: T) {
