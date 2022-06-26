@@ -36,6 +36,11 @@ export class V1DataLayer {
     this.isDirty.value = true;
   }
 
+  public deleteEntry(entryToDelete: IV1Entry) {
+    this.entries.value = this.entries.value.filter((entry) => entry.id !== entryToDelete.id);
+    this.isDirty.value = true;
+  }
+
   private getTags(entry: IV1StorageEntry): string[] {
     const regex = /(#\w*)/g;
     return entry.body.match(regex);
