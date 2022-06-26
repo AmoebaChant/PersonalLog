@@ -8,6 +8,37 @@ body {
 #root {
   margin: 5px;
 }
+.notLoggedInRoot {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  align-items:center;
+  justify-content:center;
+}
+.notLoggedInPanel {
+  margin: 0px 50px 50px 50px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: #404040;
+  max-width: 500px;
+}
+.appTitle {
+  font-size: 14pt;
+  margin: 10px;
+}
+.loginButton {
+  margin: 10px;
+}
+.appSubtitle {
+  font-size: 9pt;
+  margin: 10px;
+}
 .menuRoot {
   margin-bottom: 10px;
   display: flex;
