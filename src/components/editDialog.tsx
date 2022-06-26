@@ -3,19 +3,21 @@ import { useDataLayerContext } from '../dataLayer/dataLayerContext';
 import { IV1Entry } from '../dataLayer/v1/schema';
 
 export interface IEditDialogProps {
-  entries: IV1Entry[];
-  initialIndex: number;
-  requestClose: () => void;
+  onClose: () => void;
+  onPrevious?: () => void;
+  previousEnabled?: boolean;
+  onNext?: () => void;
+  nextEnabled?: boolean;
+  initialMode: Mode;
+  entry: IV1Entry;
 }
+
+type Mode = 'view' | 'edit';
 
 export function EditDialog(props: IEditDialogProps) {
   const dataLayer = useDataLayerContext();
-  const [indexToUse, setIndexToUse] = React.useState(props.initialIndex);
   const [isDeleteConfirmationShown, setIsDeleteConfirmationShown] = React.useState<boolean>(false);
-
-  function onCloseClick() {
-    props.requestClose();
-  }
+  const [mode, setMode] = React.useState<Mode>(props.initialMode);
 
   function onDeleteClick() {
     setIsDeleteConfirmationShown(true);
@@ -23,20 +25,12 @@ export function EditDialog(props: IEditDialogProps) {
 
   function confirmDelete() {
     setIsDeleteConfirmationShown(false);
-    dataLayer.deleteEntry(props.entries[indexToUse]);
-    props.requestClose();
+    dataLayer.deleteEntry(props.entry);
+    props.onClose();
   }
 
   function cancelDelete() {
     setIsDeleteConfirmationShown(false);
-  }
-
-  function onPrevClick() {
-    setIndexToUse((prev) => prev - 1);
-  }
-
-  function onNextClick() {
-    setIndexToUse((prev) => prev + 1);
   }
 
   return (
@@ -47,17 +41,17 @@ export function EditDialog(props: IEditDialogProps) {
             <button onClick={onDeleteClick}>Delete</button>
           </div>
           <div className="editHeaderRight">
-            <button onClick={onPrevClick} disabled={indexToUse === 0}>
+            <button onClick={props.onPrevious} disabled={!props.previousEnabled}>
               Prev
             </button>
-            <button onClick={onNextClick} disabled={indexToUse === props.entries.length - 1}>
+            <button onClick={props.onNext} disabled={!props.nextEnabled}>
               Next
             </button>
-            <button onClick={onCloseClick}>X</button>
+            <button onClick={props.onClose}>X</button>
           </div>
         </div>
         <div className="entryHeader">
-          <div className="entryDate">{new Date(props.entries[indexToUse].date).toDateString()}</div>
+          <div className="entryDate">{new Date(props.entry.date).toDateString()}</div>
         </div>
         <div className="entryBodyRoot">
           {isDeleteConfirmationShown ? (
@@ -69,7 +63,7 @@ export function EditDialog(props: IEditDialogProps) {
               </div>
             </div>
           ) : (
-            <div className="entryBody">{props.entries[indexToUse].body}</div>
+            <div className="entryBody">{props.entry.body}</div>
           )}
         </div>
       </div>

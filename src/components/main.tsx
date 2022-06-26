@@ -6,7 +6,7 @@ import { useObservable } from '../dataLayer/observable/useObservable';
 import { useDataLayerContext } from '../dataLayer/dataLayerContext';
 import { useFilterContext } from './filterContext';
 import { IV1Entry } from '../dataLayer/v1/schema';
-import { EditDialog } from './editDialog';
+import { EditListItemDialog } from './editListItemDialog';
 
 export type DataLoadingState = 'start' | 'loading' | 'saved' | 'dirty' | 'saving' | 'error';
 
@@ -48,7 +48,15 @@ export function Main(props: IMainProps) {
         <Menu dataLoadingState={props.dataLoadingState} />
         <List entries={filteredEntries} itemClicked={itemClicked} />
       </div>
-      {isEditDialogShown ? <EditDialog entries={filteredEntries} initialIndex={currentListIndex} requestClose={requestClose}></EditDialog> : <></>}
+      {isEditDialogShown ? (
+        <EditListItemDialog
+          entries={filteredEntries}
+          initialIndex={currentListIndex}
+          requestClose={requestClose}
+        ></EditListItemDialog>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
