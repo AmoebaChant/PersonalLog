@@ -27,7 +27,6 @@ body {
   background: #101010;
 }
 .listItem {
-  margin: 0px 0px 15px 0px;
   cursor: pointer;
 }
 .entryHeader {
@@ -42,6 +41,7 @@ body {
 }
 .entryBody {
   margin: 5px;
+  padding-bottom: 15px;
 }
 .entryBodyRoot {
   background: #101010;
