@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Auth } from '../dataLayer/auth';
-import { loadAllEntries, selectIsDirty, setIsDirty } from '../dataLayer/entriesSlice';
 import { loadData as loadDataFromStorage, saveData } from '../storage/storage';
-import { store } from '../dataLayer/store';
 import { List } from './list';
 import { Menu } from './menu';
 import { AddDialog } from './addDialog';
+import { useObservable } from '../dataLayer/observable/useObservable';
+import { useDataLayerContext } from '../dataLayer/dataLayerContext';
 
 export type DataLoadingState = 'start' | 'loading' | 'saved' | 'dirty' | 'saving' | 'error';
 
@@ -15,18 +14,17 @@ export interface ILoggedInMainProps {
 }
 
 export function LoggedInMain(props: ILoggedInMainProps) {
+  const dataLayer = useDataLayerContext();
   const [dataLoadingState, setDataLoadingState] = React.useState<DataLoadingState>('start');
   const saveTimer = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [isAddDialogShown, setIsAddDialogShown] = React.useState<boolean>(false);
-  const isDirty = useSelector(selectIsDirty);
-
-  const dispatch = useDispatch();
+  const isDataLayerDirty = useObservable(dataLayer.isDirty);
 
   async function loadData(): Promise<void> {
     try {
       setDataLoadingState('loading');
-      const rootState = await loadDataFromStorage(await props.auth.getAccessToken());
-      dispatch(loadAllEntries(rootState.entries));
+      const storedData = await loadDataFromStorage(await props.auth.getAccessToken());
+      dataLayer.loadFromStorage(storedData);
       setDataLoadingState('saved');
     } catch (error) {
       console.log('Load error: ' + error);
@@ -35,6 +33,7 @@ export function LoggedInMain(props: ILoggedInMainProps) {
   }
 
   React.useEffect(() => {
+    console.log(`New DataLoadingState: ${dataLoadingState}`);
     switch (dataLoadingState) {
       case 'start':
         loadData();
@@ -46,23 +45,23 @@ export function LoggedInMain(props: ILoggedInMainProps) {
   }, [dataLoadingState]);
 
   React.useEffect(() => {
-    if (isDirty) {
-      setDataLoadingState('dirty');
+    if (isDataLayerDirty) {
+      setDataLoadingState((prevState) => (prevState !== 'saving' ? 'dirty' : 'saving'));
     }
-  }, [isDirty]);
+  }, [isDataLayerDirty]);
 
   async function saveNow(): Promise<void> {
     try {
       setDataLoadingState('saving');
-      const stateToSave = store.getState();
-      await saveData(await props.auth.getAccessToken(), stateToSave);
-      if (stateToSave.entries.changeNumber === store.getState().entries.changeNumber) {
-        dispatch(setIsDirty(false));
-        setDataLoadingState('saved');
-      } else {
-        // Data changed while we were saving
+      const dataToSave = dataLayer.getDataToSave();
+      dataLayer.isDirty.value = false;
+      await saveData(await props.auth.getAccessToken(), dataToSave);
+      if (dataLayer.isDirty.value) {
+        // Another change happened while we were saving
         setDataLoadingState('dirty');
         enqueueSave();
+      } else {
+        setDataLoadingState('saved');
       }
     } catch (error) {
       console.log('Save error: ' + error);

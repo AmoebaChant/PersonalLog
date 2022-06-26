@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { addEntry, selectEntries } from '../dataLayer/entriesSlice';
-import { v4 as uuidv4 } from 'uuid';
+import { useDataLayerContext } from '../dataLayer/dataLayerContext';
 import { DataLoadingState } from './loggedInMain';
 
 export interface IMenuProps {
@@ -9,15 +7,14 @@ export interface IMenuProps {
 }
 
 export function Menu(props: IMenuProps) {
-  const entries = useSelector(selectEntries);
-  const dispatch = useDispatch();
+  const dataLayer = useDataLayerContext();
   return (
     <div className="menuRoot">
       <div className="logo">PL</div>
       <div className="loadingState">
         [<span className="loadingStateText">{props.dataLoadingState}</span>]
       </div>
-      <button onClick={() => dispatch(addEntry({ id: uuidv4(), date: new Date(Date.now()).toISOString(), body: 'New entry' }))}>+</button>
+      <button onClick={() => dataLayer.createNewBlankEntry()}>+</button>
     </div>
   );
 }

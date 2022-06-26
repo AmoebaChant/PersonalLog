@@ -1,12 +1,10 @@
 import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { addEntry, IV1Entry, removeEntry, selectEntries } from '../dataLayer/entriesSlice';
-import { v4 as uuidv4 } from 'uuid';
+import { dataLayer, useDataLayerContext } from '../dataLayer/dataLayerContext';
 
 export function AddDialog() {
   const [date, setDate] = React.useState<string>(Date);
   const [body, setBody] = React.useState<string>('');
-  const dispatch = useDispatch();
+  const useDataLayer = useDataLayerContext();
 
   return (
     <div className="addDialog">
@@ -16,7 +14,7 @@ export function AddDialog() {
       <div className="addLabel">
         <input type="text" className="addBody" value={body} onChange={(event) => setBody(event.target.value)}></input>
       </div>
-      <button onClick={() => dispatch(addEntry({ id: uuidv4(), date: new Date(Date.now()).toISOString(), body: 'New entry' }))}>Add</button>
+      <button onClick={() => dataLayer.createNewBlankEntry()}>Add</button>
     </div>
   );
 }
