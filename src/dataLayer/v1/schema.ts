@@ -1,4 +1,5 @@
 import { ICommonSchema } from '../commonSchema';
+import { IObservable } from '../observable/observable';
 
 export interface IV1StorageEntry {
   id: string;
@@ -16,6 +17,10 @@ export const defaultV1Storage: IV1Storage = {
   entries: [] as IV1StorageEntry[]
 };
 
-export interface IV1Entry extends IV1StorageEntry {
+export interface IV1Entry {
   tags: string[];
+  id: string;
+  date: IObservable<string>;
+  body: IObservable<string>;
+  unsubscribers: (() => void)[];
 }

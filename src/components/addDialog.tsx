@@ -1,20 +1,12 @@
 import * as React from 'react';
-import { dataLayer, useDataLayerContext } from '../dataLayer/dataLayerContext';
+import { IV1Entry } from '../dataLayer/v1/schema';
+import { EditDialog } from './editDialog';
 
-export function AddDialog() {
-  const [date, setDate] = React.useState<string>(Date);
-  const [body, setBody] = React.useState<string>('');
-  const useDataLayer = useDataLayerContext();
+export interface IAddDialogProps {
+  entry: IV1Entry;
+  requestClose: () => void;
+}
 
-  return (
-    <div className="addDialog">
-      <div className="addLabel">
-        <input type="text" className="addDate" value={date} onChange={(event) => setDate(event.target.value)}></input>
-      </div>
-      <div className="addLabel">
-        <input type="text" className="addBody" value={body} onChange={(event) => setBody(event.target.value)}></input>
-      </div>
-      <button onClick={() => dataLayer.createNewBlankEntry()}>Add</button>
-    </div>
-  );
+export function AddItemDialog(props: IAddDialogProps) {
+  return <EditDialog onClose={props.requestClose} initialMode="edit" entry={props.entry}></EditDialog>;
 }
