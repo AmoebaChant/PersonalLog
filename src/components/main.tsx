@@ -7,6 +7,7 @@ import { useDataLayerContext } from '../dataLayer/dataLayerContext';
 import { useFilterContext } from './filterContext';
 import { IV1Entry } from '../dataLayer/v1/schema';
 import { EditListItemDialog } from './editListItemDialog';
+import { AddItemDialog } from './addDialog';
 
 export type DataLoadingState = 'start' | 'loading' | 'saved' | 'dirty' | 'saving' | 'error';
 
@@ -20,14 +21,16 @@ export function Main(props: IMainProps) {
   const filter = useFilterContext();
   const entries = useObservable(dataLayer.entries);
   const [filteredEntries, setFilteredEntries] = React.useState<IV1Entry[]>([]);
+  const [addedEntry, setAddedEntry] = React.useState<IV1Entry>();
   const [currentListIndex, setCurrentListIndex] = React.useState<number>(-1);
   const [isEditDialogShown, setIsEditDialogShown] = React.useState<boolean>(false);
+  const [isAddDialogShown, setIsAddDialogShown] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const newFilteredEntries = [...entries];
     if (filter.sort === 'DateDesc') {
       newFilteredEntries.sort((a, b) => {
-        return Date.parse(b.date) - Date.parse(a.date);
+        return Date.parse(b.date.value) - Date.parse(a.date.value);
       });
     }
     setFilteredEntries(newFilteredEntries);
@@ -40,12 +43,19 @@ export function Main(props: IMainProps) {
 
   function requestClose() {
     setIsEditDialogShown(false);
+    setIsAddDialogShown(false);
+  }
+
+  function onAddItem() {
+    const newEntry = dataLayer.createNewBlankEntry();
+    setAddedEntry(newEntry);
+    setIsAddDialogShown(true);
   }
 
   return (
     <div>
       <div className="loggedInRoot">
-        <Menu dataLoadingState={props.dataLoadingState} />
+        <Menu dataLoadingState={props.dataLoadingState} addItem={onAddItem} />
         <List entries={filteredEntries} itemClicked={itemClicked} />
       </div>
       {isEditDialogShown ? (
@@ -57,6 +67,8 @@ export function Main(props: IMainProps) {
       ) : (
         <></>
       )}
+
+      {isAddDialogShown ? <AddItemDialog entry={addedEntry} requestClose={requestClose}></AddItemDialog> : <></>}
     </div>
   );
 }

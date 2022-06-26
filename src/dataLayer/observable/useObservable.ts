@@ -7,7 +7,7 @@ export function useObservable<T>(observable: IObservable<T>) {
     function handleNewValue(newValue: T) {
       setValue(newValue);
     }
-    const unsubscribe = observable.subscribe(handleNewValue, { notifyWithCurrentValue: false });
+    const unsubscribe = observable.subscribe(handleNewValue, { notifyWithCurrentValue: true });
     return unsubscribe;
   }, [observable]);
 

@@ -4,6 +4,7 @@ import { DataLoadingState } from './main';
 
 export interface IMenuProps {
   dataLoadingState: DataLoadingState;
+  addItem: () => void;
 }
 
 export function Menu(props: IMenuProps) {
@@ -14,7 +15,7 @@ export function Menu(props: IMenuProps) {
       <div className="loadingState">
         [<span className="loadingStateText">{props.dataLoadingState}</span>]
       </div>
-      <button onClick={() => dataLayer.createNewBlankEntry()}>+</button>
+      <button onClick={props.addItem}>+</button>
     </div>
   );
 }
