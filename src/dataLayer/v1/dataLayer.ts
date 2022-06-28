@@ -2,7 +2,7 @@ import { IObservable, Observable } from '../observable/observable';
 import { ITag, IV1Entry, IV1Storage, IV1StorageEntry } from './schema';
 import { v4 as uuidv4 } from 'uuid';
 
-const TagColors: string[] = ['red', 'blue', 'green', 'yellow', 'orange'];
+const TagColors: string[] = ['red', 'blue', 'green', 'purple', 'orange'];
 
 export class V1DataLayer {
   private nextTagColorIndex = 0;
