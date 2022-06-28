@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { dataLayer } from '../dataLayer/dataLayerContext';
 import { useObservable } from '../dataLayer/observable/useObservable';
+import { V1Entry } from '../dataLayer/v1/entry';
 import { IV1Entry } from '../dataLayer/v1/schema';
 import { useFilterContext } from './filterContext';
 
@@ -34,7 +36,7 @@ export function ListItem(props: IListItemProps) {
           ))}
         </div>
       </div>
-      <div className="entryBody">{body}</div>
+      <div className="entryBody">{V1Entry.getBodyWithoutLeadingTags(body)}</div>
     </div>
   );
 }
