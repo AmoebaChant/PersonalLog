@@ -74,6 +74,10 @@ export class V1DataLayer {
     }
   }
 
+  public getTagColor(tagName: string): string {
+    return this.getColor(tagName);
+  }
+
   private getTags(body: string): ITag[] {
     const regex = /(#\w*)/g;
     const tagStrings = body.match(regex);
