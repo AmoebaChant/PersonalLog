@@ -19,7 +19,7 @@ export class V1DataLayer {
 
     for (const entry of storedData.entries) {
       const newEntry: IV1Entry = {
-        tags: new Observable<ITag[]>(this.getTags(entry)),
+        tags: new Observable<ITag[]>(this.getTags(entry.body)),
         id: entry.id,
         date: new Observable<string>(entry.date),
         body: new Observable<string>(entry.body),
@@ -74,9 +74,9 @@ export class V1DataLayer {
     }
   }
 
-  private getTags(entry: IV1StorageEntry): ITag[] {
+  private getTags(body: string): ITag[] {
     const regex = /(#\w*)/g;
-    const tagStrings = entry.body.match(regex);
+    const tagStrings = body.match(regex);
 
     const tags: ITag[] = [];
 
@@ -106,7 +106,15 @@ export class V1DataLayer {
 
   private subscribeToFieldChanges(entry: IV1Entry): void {
     // Subscribe to set the dirty bit if any fields are changed
-    entry.unsubscribers.push(entry.body.subscribe(this.setIsDirty.bind(this), { notifyWithCurrentValue: false }));
+    entry.unsubscribers.push(
+      entry.body.subscribe(
+        () => {
+          this.setIsDirty.bind(this);
+          entry.tags.value = this.getTags(entry.body.value);
+        },
+        { notifyWithCurrentValue: false }
+      )
+    );
     entry.unsubscribers.push(entry.date.subscribe(this.setIsDirty.bind(this), { notifyWithCurrentValue: false }));
     entry.unsubscribers.push(entry.tags.subscribe(this.setIsDirty.bind(this), { notifyWithCurrentValue: false }));
   }
