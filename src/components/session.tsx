@@ -5,6 +5,7 @@ import { useObservable } from '../dataLayer/observable/useObservable';
 import { useDataLayerContext } from '../dataLayer/dataLayerContext';
 import { DataLoadingState, Main } from './main';
 import { FilterContext } from './filterContext';
+import { Filter } from './filter';
 
 export interface ISessionProps {
   auth: Auth;
@@ -74,7 +75,7 @@ export function Session(props: ISessionProps) {
   }
 
   return (
-    <FilterContext.Provider value={{ sort: 'DateDesc' }}>
+    <FilterContext.Provider value={new Filter()}>
       <Main auth={props.auth} dataLoadingState={dataLoadingState}></Main>
     </FilterContext.Provider>
   );
