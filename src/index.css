@@ -71,6 +71,7 @@ body {
   background-color: #EEEEEE;
   border-bottom: 1px solid lightgray;
   border-top: 1px solid lightgray;
+  padding-left: 6px;
 }
 .entryDate {
   font-size: 10pt;
