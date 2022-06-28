@@ -19,6 +19,7 @@ export interface IMainProps {
 export function Main(props: IMainProps) {
   const dataLayer = useDataLayerContext();
   const filter = useFilterContext();
+  const filterTagsRequired = useObservable(filter.tagsRequired);
   const entries = useObservable(dataLayer.entries);
   const [filteredEntries, setFilteredEntries] = React.useState<IV1Entry[]>([]);
   const [addedEntry, setAddedEntry] = React.useState<IV1Entry>();
@@ -27,14 +28,24 @@ export function Main(props: IMainProps) {
   const [isAddDialogShown, setIsAddDialogShown] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    const newFilteredEntries = [...entries];
+    const newFilteredEntries = entries.filter((entry) => {
+      if (filterTagsRequired.length === 0) {
+        return true;
+      }
+      for (const requiredTag of filterTagsRequired) {
+        if (entry.tags.value.findIndex((entryTag) => entryTag.name === requiredTag) === -1) {
+          return false;
+        }
+      }
+      return true;
+    });
     if (filter.sort === 'DateDesc') {
       newFilteredEntries.sort((a, b) => {
         return Date.parse(b.date.value) - Date.parse(a.date.value);
       });
     }
     setFilteredEntries(newFilteredEntries);
-  }, [entries, filter]);
+  }, [entries, filter, filterTagsRequired]);
 
   function itemClicked(index: number) {
     setCurrentListIndex(index);
