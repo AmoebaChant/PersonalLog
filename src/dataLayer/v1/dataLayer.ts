@@ -1,6 +1,7 @@
 import { IObservable, Observable } from '../observable/observable';
 import { ITag, IV1Entry, IV1Storage, IV1StorageEntry } from './schema';
 import { v4 as uuidv4 } from 'uuid';
+import { V1Entry } from './entry';
 
 const TagColors: string[] = ['red', 'blue', 'green', 'purple', 'orange'];
 
@@ -18,13 +19,7 @@ export class V1DataLayer {
     }
 
     for (const entry of storedData.entries) {
-      const newEntry: IV1Entry = {
-        tags: new Observable<ITag[]>(this.getTags(entry.body)),
-        id: entry.id,
-        date: new Observable<string>(entry.date),
-        body: new Observable<string>(entry.body),
-        unsubscribers: []
-      };
+      const newEntry = new V1Entry(entry.id, this.getTags(entry.body), entry.date, entry.body);
 
       this.subscribeToFieldChanges(newEntry);
 
@@ -49,13 +44,7 @@ export class V1DataLayer {
   }
 
   public createNewBlankEntry(): IV1Entry {
-    const newEntry: IV1Entry = {
-      id: uuidv4(),
-      date: new Observable<string>(new Date(Date.now()).toISOString()),
-      body: new Observable<string>(''),
-      tags: new Observable<ITag[]>([]),
-      unsubscribers: []
-    };
+    const newEntry = new V1Entry(uuidv4(), [], new Date(Date.now()).toISOString(), '');
 
     this.subscribeToFieldChanges(newEntry);
 
