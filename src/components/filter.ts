@@ -32,11 +32,8 @@ export class Filter implements IFilter {
   }
 
   public addRequiredTag(tagName: string): void {
-    if (
-      this.tagsRequired.value.findIndex((requiredTagName) => {
-        requiredTagName === tagName;
-      }) === -1
-    ) {
+    const val = this.tagsRequired.value.findIndex((requiredTagName) => requiredTagName === tagName);
+    if (val === -1) {
       const newRequiredTagList = this.tagsRequired.value.slice();
       newRequiredTagList.push(tagName);
       this.tagsRequired.value = newRequiredTagList;
