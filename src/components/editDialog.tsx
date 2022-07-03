@@ -2,6 +2,8 @@ import * as React from 'react';
 import { useDataLayerContext } from '../dataLayer/dataLayerContext';
 import { useObservable } from '../dataLayer/observable/useObservable';
 import { IV1Entry } from '../dataLayer/v1/schema';
+import DOMPurify from 'dompurify';
+import RichTextEditor, { EditorValue, ToolbarConfig } from 'react-rte';
 
 export interface IEditDialogProps {
   onClose: () => void;
@@ -15,6 +17,26 @@ export interface IEditDialogProps {
 
 type Mode = 'view' | 'edit';
 type Dialog = 'none' | 'deleteConfirmation' | 'cancelConfirmation' | 'invalidDate';
+
+const toolbarConfig: ToolbarConfig = {
+  // Optionally specify the groups to display (displayed in the order listed).
+  display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'HISTORY_BUTTONS'],
+  INLINE_STYLE_BUTTONS: [
+    { label: 'Bold', style: 'BOLD', className: 'custom-css-class' },
+    { label: 'Italic', style: 'ITALIC' },
+    { label: 'Underline', style: 'UNDERLINE' }
+  ],
+  BLOCK_TYPE_DROPDOWN: [
+    { label: 'Normal', style: 'unstyled' },
+    { label: 'Heading Large', style: 'header-one' },
+    { label: 'Heading Medium', style: 'header-two' },
+    { label: 'Heading Small', style: 'header-three' }
+  ],
+  BLOCK_TYPE_BUTTONS: [
+    { label: 'UL', style: 'unordered-list-item' },
+    { label: 'OL', style: 'ordered-list-item' }
+  ]
+};
 
 function dateToString(newString: string, backupString: string): string {
   const value = Date.parse(newString);
@@ -30,7 +52,9 @@ export function EditDialog(props: IEditDialogProps) {
   const [dialogMode, setDialogMode] = React.useState<Dialog>('none');
   const [mode, setMode] = React.useState<Mode>(props.initialMode);
   const [tempDate, setTempDate] = React.useState<string>(new Date(props.entry.date.value).toDateString());
-  const [tempBody, setTempBody] = React.useState<string>(props.entry.body.value);
+  const [tempBody, setTempBody] = React.useState<EditorValue>(
+    RichTextEditor.createValueFromString(props.entry.body.value, 'html')
+  );
   const date = useObservable(props.entry.date);
   const body = useObservable(props.entry.body);
 
@@ -60,7 +84,7 @@ export function EditDialog(props: IEditDialogProps) {
       return;
     } else {
       // Save to the model
-      props.entry.body.value = tempBody;
+      props.entry.body.value = tempBody.toString('html');
       props.entry.date.value = tempDate;
     }
     setMode('view');
@@ -87,8 +111,8 @@ export function EditDialog(props: IEditDialogProps) {
     setTempDate(event.target.value);
   }
 
-  function onBodyChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
-    setTempBody(event.target.value);
+  function onBodyChange(value: EditorValue) {
+    setTempBody(value);
   }
 
   let bodyArea: JSX.Element;
@@ -134,9 +158,14 @@ export function EditDialog(props: IEditDialogProps) {
     default: {
       bodyArea =
         mode === 'edit' ? (
-          <textarea className="entryBodyEdit" value={tempBody} onChange={onBodyChange}></textarea>
+          <RichTextEditor
+            className="entryBodyEdit"
+            value={tempBody}
+            onChange={onBodyChange}
+            toolbarConfig={toolbarConfig}
+          ></RichTextEditor>
         ) : (
-          <div className="entryBody">{body}</div>
+          <div className="entryBody" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }}></div>
         );
     }
   }

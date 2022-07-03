@@ -12,14 +12,4 @@ export class V1Entry implements IV1Entry {
     this.date.value = date;
     this.body.value = body;
   }
-
-  public static getBodyWithoutLeadingTags(body: string): string {
-    const regex = /(?:#\w*\s)*(.*)/g;
-    let textAfterLeadingTags = regex.exec(body);
-    if (textAfterLeadingTags !== null && textAfterLeadingTags.length > 1) {
-      return textAfterLeadingTags[1];
-    } else {
-      return body;
-    }
-  }
 }

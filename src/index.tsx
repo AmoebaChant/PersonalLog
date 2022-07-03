@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRoot } from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import { App } from './components/app';
 import { Auth } from './dataLayer/auth';
 import { dataLayer, DataLayerContext } from './dataLayer/dataLayerContext';
@@ -9,13 +9,13 @@ import { Filter } from './components/filter';
 import './index.css';
 
 const container = document.getElementById('root');
-const reactRoot = createRoot(container);
-
 const auth = new Auth();
-reactRoot.render(
+
+ReactDOM.render(
   <DataLayerContext.Provider value={dataLayer}>
     <FilterContext.Provider value={filter}>
       <App auth={auth} />
     </FilterContext.Provider>
-  </DataLayerContext.Provider>
+  </DataLayerContext.Provider>,
+  container
 );
