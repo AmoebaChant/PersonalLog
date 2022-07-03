@@ -15,7 +15,7 @@ export function saveData(accessToken: string, data: IV1Storage): Promise<void> {
 }
 
 export function backupDataToStorage(accessToken: string, data: IV1Storage): Promise<void> {
-  return OneDrive.writeNewFile(
+  return OneDrive.writeToFile(
     accessToken,
     `PersonalLog/Backup/PersonalLogBackup_${new Date(Date.now()).toISOString().split(':').join('.')}.json`,
     JSON.stringify(data)
