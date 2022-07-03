@@ -9,10 +9,6 @@ export interface IFilter {
   removeRequiredTag(tagName: string): void;
 }
 
-export const FilterContext = React.createContext<IFilter | undefined>({
-  sort: 'DateDesc',
-  tagsRequired: new Observable<string[]>([]),
-  removeRequiredTag: () => {},
-  addRequiredTag: () => {}
-});
+export const filter = new Filter();
+export const FilterContext = React.createContext<IFilter | undefined>(filter);
 export const useFilterContext = () => React.useContext(FilterContext);

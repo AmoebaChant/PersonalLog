@@ -18,7 +18,7 @@ export function Menu(props: IMenuProps) {
     <div className="menuRoot">
       <div className="logo">PL</div>
       <div className="loadingState">
-        [<span className="loadingStateText">{props.dataLoadingState}</span>]
+        [<span className="loadingStateText">{getFriendlyText(props.dataLoadingState)}</span>]
       </div>
       <button onClick={props.addItem}>+</button>
       <div className="filterTagList">
@@ -37,4 +37,13 @@ export function Menu(props: IMenuProps) {
       </div>
     </div>
   );
+}
+
+function getFriendlyText(dataLoadingState: DataLoadingState): string {
+  switch (dataLoadingState) {
+    case 'none':
+      return 'saved';
+    default:
+      return dataLoadingState;
+  }
 }
