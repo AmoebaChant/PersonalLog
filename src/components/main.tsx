@@ -9,7 +9,7 @@ import { IV1Entry } from '../dataLayer/v1/schema';
 import { EditListItemDialog } from './editListItemDialog';
 import { AddItemDialog } from './addDialog';
 
-export type DataLoadingState = 'start' | 'loading' | 'saved' | 'dirty' | 'saving' | 'error';
+export type DataLoadingState = 'none' | 'loading' | 'saving' | 'error';
 
 export interface IMainProps {
   auth: Auth;
