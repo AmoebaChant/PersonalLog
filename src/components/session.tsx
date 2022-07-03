@@ -4,8 +4,6 @@ import { loadData as loadDataFromStorage, saveData as saveDataToStorage } from '
 import { useObservable } from '../dataLayer/observable/useObservable';
 import { useDataLayerContext } from '../dataLayer/dataLayerContext';
 import { DataLoadingState as DataOperation, Main } from './main';
-import { FilterContext } from './filterContext';
-import { Filter } from './filter';
 
 export interface ISessionProps {
   auth: Auth;
@@ -113,9 +111,5 @@ export function Session(props: ISessionProps) {
     saveTimer.current = setTimeout(() => enqueueDataOperation('save'), 1000);
   }
 
-  return (
-    <FilterContext.Provider value={new Filter()}>
-      <Main auth={props.auth} dataLoadingState={currentDataOperation}></Main>
-    </FilterContext.Provider>
-  );
+  return <Main auth={props.auth} dataLoadingState={currentDataOperation}></Main>;
 }
