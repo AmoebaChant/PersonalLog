@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { Auth } from '../dataLayer/auth';
-import { loadData as loadDataFromStorage, saveData as saveDataToStorage } from '../storage/storage';
+import {
+  backupDataToStorage,
+  loadData as loadDataFromStorage,
+  saveData as saveDataToStorage
+} from '../storage/storage';
 import { useObservable } from '../dataLayer/observable/useObservable';
 import { useDataLayerContext } from '../dataLayer/dataLayerContext';
 import { DataLoadingState as DataOperation, Main } from './main';
@@ -96,6 +100,7 @@ export function Session(props: ISessionProps) {
       const dataToSave = dataLayer.getDataToSave();
       dataLayer.isDirty.value = false;
       await saveDataToStorage(await props.auth.getAccessToken(), dataToSave);
+      await backupDataToStorage(await props.auth.getAccessToken(), dataToSave);
       setCurrentDataOperation('none');
     } catch (error) {
       console.error('Save error: ' + error);
