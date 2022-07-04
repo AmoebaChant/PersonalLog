@@ -12,7 +12,7 @@ export interface IListItemProps {
 export function ListItem(props: IListItemProps) {
   const date = useObservable(props.entry.date);
   const body = useObservable(props.entry.body);
-  const tags = useObservable(props.entry.tags);
+  const allTags = useObservable(props.entry.allTags);
   const filter = useFilterContext();
 
   return (
@@ -20,7 +20,7 @@ export function ListItem(props: IListItemProps) {
       <div className="entryHeader">
         <div className="entryDate">{new Date(date).toDateString()}</div>
         <div className="tagList">
-          {tags.map((tagItem) => (
+          {allTags.map((tagItem) => (
             <span
               className="tag"
               style={{ borderColor: tagItem.color }}

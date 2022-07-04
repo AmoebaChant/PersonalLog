@@ -2,9 +2,13 @@ export interface ISubscribeOptions {
   notifyWithCurrentValue: boolean;
 }
 
-export interface IObservable<T> {
-  subscribe(callback: (newValue: T) => void, options: ISubscribeOptions): () => void;
+export interface IObservable<T> extends IReadOnlyObservable<T> {
   value: T;
+}
+
+export interface IReadOnlyObservable<T> {
+  subscribe(callback: (newValue: T) => void, options: ISubscribeOptions): () => void;
+  readonly value: T;
 }
 
 export class Observable<T> implements IObservable<T> {

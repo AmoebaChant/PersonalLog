@@ -25,7 +25,17 @@ export class V1DataLayer {
 
     // Create V1Entry objects for each entry passed in
     for (const entry of storedData.entries) {
-      const newEntry = new V1Entry(entry.id, this.getTags(entry.body), entry.date, entry.body);
+      const newEntry = new V1Entry(
+        entry.id,
+        entry.tags
+          ? entry.tags.map((tagString) => {
+              return this.stringToTag(tagString);
+            })
+          : [],
+        this.getTagsFromBody(entry.body),
+        entry.date,
+        entry.body
+      );
       storedEntryList.push(newEntry);
     }
 
@@ -98,22 +108,8 @@ export class V1DataLayer {
     this.addedEntryIds.length = 0;
   }
 
-  public getDataToSave(): IV1Storage {
-    return {
-      version: '1',
-      entries: this.entries.value.map((entry) => {
-        return {
-          id: entry.id,
-          date: entry.date.value,
-          body: entry.body.value,
-          tags: undefined
-        };
-      })
-    };
-  }
-
   public createNewBlankEntry(): IV1Entry {
-    const newEntry = new V1Entry(uuidv4(), [], new Date(Date.now()).toISOString(), '');
+    const newEntry = new V1Entry(uuidv4(), [], [], new Date(Date.now()).toISOString(), '');
     this.addedEntryIds.push(newEntry.id);
 
     this.subscribeToFieldChanges(newEntry);
@@ -138,7 +134,7 @@ export class V1DataLayer {
     return this.getColor(tagName);
   }
 
-  private getTags(body: string): ITag[] {
+  private getTagsFromBody(body: string): ITag[] {
     const regex = /(#\w*)/g;
     const tagStrings = body.match(regex);
 
@@ -146,11 +142,15 @@ export class V1DataLayer {
 
     if (tagStrings !== null) {
       for (const tagString of tagStrings) {
-        tags.push({ name: tagString, color: this.getColor(tagString) });
+        tags.push(this.stringToTag(tagString));
       }
     }
 
     return tags;
+  }
+
+  private stringToTag(tagString: string): ITag {
+    return { name: tagString, color: this.getColor(tagString) };
   }
 
   private getColor(tag: string): string {
@@ -174,7 +174,7 @@ export class V1DataLayer {
       entry.body.subscribe(
         () => {
           this.setIsDirty.bind(this);
-          entry.tags.value = this.getTags(entry.body.value);
+          entry.tags.value = this.getTagsFromBody(entry.body.value);
           this.dirtyEntryIds.push(entry.id);
         },
         { notifyWithCurrentValue: false }

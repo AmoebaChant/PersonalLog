@@ -1,10 +1,11 @@
 import { ICommonSchema } from '../commonSchema';
-import { IObservable } from '../observable/observable';
+import { IObservable, IReadOnlyObservable } from '../observable/observable';
 
 export interface IV1StorageEntry {
   id: string;
   date: string;
   body: string;
+  tags: string[];
 }
 
 export interface IV1Storage extends ICommonSchema {
@@ -23,6 +24,7 @@ export interface ITag {
 }
 export interface IV1Entry {
   tags: IObservable<ITag[]>;
+  allTags: IReadOnlyObservable<ITag[]>;
   id: string;
   date: IObservable<string>;
   body: IObservable<string>;

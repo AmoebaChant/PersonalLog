@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { Auth } from '../dataLayer/auth';
-import {
-  backupDataToStorage,
-  loadData as loadDataFromStorage,
-  saveData as saveDataToStorage
-} from '../storage/storage';
 import { useObservable } from '../dataLayer/observable/useObservable';
 import { useDataLayerContext } from '../dataLayer/dataLayerContext';
 import { DataLoadingState as DataOperation, Main } from './main';
+import { loadDataFromStorage, saveAndBackupDataToStorage } from '../storage/storage';
 
 export interface ISessionProps {
   auth: Auth;
@@ -97,10 +93,8 @@ export function Session(props: ISessionProps) {
       // Now save after the load is complete (which also merged our local changes into memory)
       console.log(`Saving`);
       setCurrentDataOperation('saving');
-      const dataToSave = dataLayer.getDataToSave();
       dataLayer.isDirty.value = false;
-      await saveDataToStorage(await props.auth.getAccessToken(), dataToSave);
-      await backupDataToStorage(await props.auth.getAccessToken(), dataToSave);
+      await saveAndBackupDataToStorage(await props.auth.getAccessToken(), dataLayer);
       setCurrentDataOperation('none');
     } catch (error) {
       console.error('Save error: ' + error);

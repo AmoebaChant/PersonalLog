@@ -1,6 +1,7 @@
 import { ICommonSchema } from '../../dataLayer/commonSchema';
+import { V1DataLayer } from '../../dataLayer/v1/dataLayer';
 import { defaultV1Storage, IV1Storage } from '../../dataLayer/v1/schema';
-import { loadV1 } from './v1';
+import { loadV1, saveV1 } from './v1';
 
 export function loadFromStorageContents(storageContents: string | undefined): IV1Storage {
   if (storageContents === undefined) {
@@ -24,4 +25,8 @@ export function loadFromStorageContents(storageContents: string | undefined): IV
     console.error('Failed to load from storage contents: ' + error);
     return defaultV1Storage;
   }
+}
+
+export function serializeToString(dataLayer: V1DataLayer): string {
+  return saveV1(dataLayer);
 }

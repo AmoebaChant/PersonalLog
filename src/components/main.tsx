@@ -33,7 +33,7 @@ export function Main(props: IMainProps) {
         return true;
       }
       for (const requiredTag of filterTagsRequired) {
-        if (entry.tags.value.findIndex((entryTag) => entryTag.name === requiredTag) === -1) {
+        if (entry.allTags.value.findIndex((entryTag) => entryTag.name === requiredTag) === -1) {
           return false;
         }
       }
