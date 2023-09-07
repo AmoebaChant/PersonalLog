@@ -28,5 +28,6 @@ export interface IV1Entry {
   id: string;
   date: IObservable<string>;
   body: IObservable<string>;
+  bodyTags: IObservable<ITag[]>;
   unsubscribers: (() => void)[];
 }

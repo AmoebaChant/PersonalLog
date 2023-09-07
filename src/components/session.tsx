@@ -93,8 +93,8 @@ export function Session(props: ISessionProps) {
       // Now save after the load is complete (which also merged our local changes into memory)
       console.log(`Saving`);
       setCurrentDataOperation('saving');
-      dataLayer.isDirty.value = false;
       await saveAndBackupDataToStorage(await props.auth.getAccessToken(), dataLayer);
+      dataLayer.onSaveComplete();
       setCurrentDataOperation('none');
     } catch (error) {
       console.error('Save error: ' + error);

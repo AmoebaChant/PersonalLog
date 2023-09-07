@@ -101,8 +101,11 @@ export class V1DataLayer {
 
     // Store the new entry list
     this.entries.value = newEntryList;
+  }
 
+  public onSaveComplete(): void {
     // Clear the dirty states
+    this.isDirty.value = false;
     this.dirtyEntryIds.length = 0;
     this.deletedEntryIds.length = 0;
     this.addedEntryIds.length = 0;
@@ -174,7 +177,7 @@ export class V1DataLayer {
       entry.body.subscribe(
         () => {
           this.setIsDirty.bind(this);
-          entry.tags.value = this.getTagsFromBody(entry.body.value);
+          entry.bodyTags.value = this.getTagsFromBody(entry.body.value);
           this.dirtyEntryIds.push(entry.id);
         },
         { notifyWithCurrentValue: false }
