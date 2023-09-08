@@ -167,8 +167,9 @@ export class V1DataLayer {
     }
   }
 
-  private setIsDirty(): void {
+  private setIsDirty(entry: IV1Entry): void {
     this.isDirty.value = true;
+    this.dirtyEntryIds.push(entry.id);
   }
 
   private subscribeToFieldChanges(entry: IV1Entry): void {
@@ -176,14 +177,17 @@ export class V1DataLayer {
     entry.unsubscribers.push(
       entry.body.subscribe(
         () => {
-          this.setIsDirty.bind(this);
+          this.setIsDirty(entry);
           entry.bodyTags.value = this.getTagsFromBody(entry.body.value);
-          this.dirtyEntryIds.push(entry.id);
         },
         { notifyWithCurrentValue: false }
       )
     );
-    entry.unsubscribers.push(entry.date.subscribe(this.setIsDirty.bind(this), { notifyWithCurrentValue: false }));
-    entry.unsubscribers.push(entry.tags.subscribe(this.setIsDirty.bind(this), { notifyWithCurrentValue: false }));
+    entry.unsubscribers.push(
+      entry.date.subscribe(this.setIsDirty.bind(this, entry), { notifyWithCurrentValue: false })
+    );
+    entry.unsubscribers.push(
+      entry.tags.subscribe(this.setIsDirty.bind(this, entry), { notifyWithCurrentValue: false })
+    );
   }
 }
